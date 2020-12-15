@@ -7,12 +7,24 @@ These instructions will help you set up this library easily on your current proj
 
 ## Installing
 
-To be able to use the following library, you will need to add the following gradle dependency in your build.gradle(module:app) file
+Step 1. Add the JitPack repository to your project-level `build.gradle` file
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
 
+Step 2. Add the tovuti dependency to your app-level `build.gradle` file
 ```
-implementation 'com.androidstudy:tovuti:0.0.1'
+	dependencies {
+	        implementation 'com.github.abdallah-mongez:tovuti:Tag'
+	}
 ```
-That is the basic set up needed to be able to use the library in your applications!
+
+For more info visit: https://jitpack.io/#abdallah-mongez/tovuti
 
 ## Permissions
 
