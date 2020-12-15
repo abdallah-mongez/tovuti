@@ -1,11 +1,13 @@
-package com.androidstudy.tovuti;
+package com.androidstudy.tovuti.demo;
 
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.androidstudy.tovuti.databinding.ActivityMainBinding;
+import com.androidstudy.tovuti.Monitor;
+import com.androidstudy.tovuti.Tovuti;
+import com.androidstudy.tovuti.demo.databinding.ActivityMainBinding;
 
 import java.util.Locale;
 

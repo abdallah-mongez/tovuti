@@ -3,8 +3,8 @@ package com.androidstudy.tovuti.internal;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.androidstudy.tovuti.Monitor;
 import com.androidstudy.tovuti.MonitorFactory;
