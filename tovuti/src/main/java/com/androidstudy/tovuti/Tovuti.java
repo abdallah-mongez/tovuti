@@ -14,21 +14,23 @@ import java.util.Set;
  */
 
 public class Tovuti {
-    private static final String TAG = "Tovuti";
-    private static final Object lock = new Object();
+
+    private static final String TAG = Tovuti.class.getSimpleName();
+
+    private static final Object LOCK = new Object();
 
     private static volatile Tovuti tovuti;
     private WeakReference<Context> contextRef;
-    private Set<Monitor> monitors;
+    private Set<WeakReference<Monitor>> monitorsRefs;
 
     private Tovuti(Context context) {
-        monitors = new HashSet<>();
-        this.contextRef = new WeakReference<>(context);
+        contextRef = new WeakReference<>(context);
+        monitorsRefs = new HashSet<>();
     }
 
     public static Tovuti from(Context context) {
         if (tovuti == null) {
-            synchronized (lock) {
+            synchronized (LOCK) {
                 if (tovuti == null) {
                     tovuti = new Tovuti(context);
                 }
@@ -39,8 +41,11 @@ public class Tovuti {
 
     public Tovuti monitor(int connectionType, Monitor.ConnectivityListener listener) {
         Context context = contextRef.get();
-        if (context != null)
-            monitors.add(new DefaultMonitorFactory().create(context, connectionType, listener));
+        if (context != null) {
+            monitorsRefs.add(new WeakReference<>(
+                    new DefaultMonitorFactory().create(context, connectionType, listener))
+            );
+        }
 
         start();
         return tovuti;
@@ -51,17 +56,17 @@ public class Tovuti {
     }
 
     public void start() {
-        for (Monitor monitor : monitors) {
-            monitor.onStart();
+        for (WeakReference<Monitor> monitor : monitorsRefs) {
+            if (monitor.get() != null) monitor.get().onStart();
         }
 
-        if (monitors.size() > 0)
+        if (monitorsRefs.size() > 0)
             Log.i(TAG, "started tovuti");
     }
 
     public void stop() {
-        for (Monitor monitor : monitors) {
-            monitor.onStop();
+        for (WeakReference<Monitor> monitorRef : monitorsRefs) {
+            if (monitorRef.get() != null) monitorRef.get().onStop();
         }
     }
 }
