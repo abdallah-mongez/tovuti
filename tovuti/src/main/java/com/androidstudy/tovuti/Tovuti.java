@@ -21,11 +21,11 @@ public class Tovuti {
 
     private static volatile Tovuti tovuti;
     private WeakReference<Context> contextRef;
-    private Set<WeakReference<Monitor>> monitorsRefs;
+    private Set<Monitor> monitors;
 
     private Tovuti(Context context) {
         contextRef = new WeakReference<>(context);
-        monitorsRefs = new HashSet<>();
+        monitors = new HashSet<>();
     }
 
     public static Tovuti from(Context context) {
@@ -42,9 +42,7 @@ public class Tovuti {
     public Tovuti monitor(int connectionType, Monitor.ConnectivityListener listener) {
         Context context = contextRef.get();
         if (context != null) {
-            monitorsRefs.add(new WeakReference<>(
-                    new DefaultMonitorFactory().create(context, connectionType, listener))
-            );
+            monitors.add(new DefaultMonitorFactory().create(context, connectionType, listener));
         }
 
         start();
@@ -56,17 +54,22 @@ public class Tovuti {
     }
 
     public void start() {
-        for (WeakReference<Monitor> monitor : monitorsRefs) {
-            if (monitor.get() != null) monitor.get().onStart();
+        for (Monitor monitor : monitors) {
+            monitor.onStart();
         }
 
-        if (monitorsRefs.size() > 0)
+        if (monitors.size() > 0)
             Log.i(TAG, "started tovuti");
     }
 
     public void stop() {
-        for (WeakReference<Monitor> monitorRef : monitorsRefs) {
-            if (monitorRef.get() != null) monitorRef.get().onStop();
+        for (Monitor monitor : monitors) {
+            monitor.onStop();
         }
+    }
+
+    public void release() {
+        tovuti = null;
+        monitors.clear();
     }
 }
