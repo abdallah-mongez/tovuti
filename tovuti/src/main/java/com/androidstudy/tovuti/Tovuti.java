@@ -69,7 +69,7 @@ public class Tovuti {
     }
 
     public void release() {
-        tovuti = null;
         monitors.clear();
+        tovuti = null;
     }
 }
